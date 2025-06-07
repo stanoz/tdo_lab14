@@ -85,13 +85,13 @@ jobs:
         run: |
           docker compose up -d --build
           docker compose -f compose.yaml ps
-      - name: Wait for services to be ready
-        run: sleep 30
+#      - name: Wait for services to be ready
+#        run: sleep 30
       - name: Run unit tests inside app container
-        run: docker-compose exec app npm run test:unit
+        run: docker compose exec app npm run test:unit
       - name: Test report
         uses: actions/download-artifact@v4
         with:
           name: coverage/lcov-report
       - name: Tear down services
-        run: docker-compose -f docker-compose.yml down --volumes --remove-orphans
+        run: docker compose -f compose.yaml down --volumes --remove-orphans
