@@ -76,7 +76,7 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
-          docker compose up -d
+          docker compose up -d db redis
 
       - name: Run unit tests inside container
         run: |
