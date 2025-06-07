@@ -12,7 +12,7 @@ services:
       POSTGRES_HOST: db
       POSTGRES_DATABASE: db_lab14
       POSTGRES_PORT: 5432
-      REDIS_HOST: localhost
+      REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:
       db:
