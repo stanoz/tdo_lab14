@@ -81,7 +81,7 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
-          set NODE_VERSION=${{ matrix.node_version }}
+          NODE_VERSION=${{ matrix.node_version }}
           docker compose up -d
 
       - name: Run unit tests inside container
