@@ -63,3 +63,34 @@ jobs:
       - name: Fix format on failure
         if: steps.format-check.outcome == 'failure'
         run: npx prettier . --write
+  unit-tests:
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+    needs:
+      - audit
+      - format-check
+      - lint
+    steps:
+      - name: Set Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Load and cache dependencies
+        uses: ./.github/actions/cached-deps
+      - name: Run unit tests
+        id: unit-tests
+        run: npm run test:unit
+      - name: Test report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage/lcov-report
