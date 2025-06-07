@@ -178,5 +178,6 @@ jobs:
       - integraion-tests
       - unit-tests
     steps:
-      if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integraion-tests.result == 'success' }}
-      run: echo "Building the app..."
+      - name: Build the app
+        if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integraion-tests.result == 'success' }}
+        run: echo "Building the app..."
