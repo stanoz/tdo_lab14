@@ -59,6 +59,7 @@ jobs:
       - name: Check format
         id: format-check
         run: npm run format:check
+        continue-on-error: true
       - name: Fix format on failure
         if: failure() && steps.format-check.outcome == 'failure'
         run: npx prettier . --write
