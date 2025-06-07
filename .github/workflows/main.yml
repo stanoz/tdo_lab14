@@ -64,9 +64,16 @@ jobs:
         if: steps.format-check.outcome == 'failure'
         run: npx prettier . --write
   unit_tests:
+    needs:
+      - audit
+      - format-check
+      - lint
     strategy:
       matrix:
         node_version: [16, 18, 20]
+    env:
+        NODE_ENV: test
+        NODE_VERSION: ${{ matrix.node_version }}
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node_version }}
