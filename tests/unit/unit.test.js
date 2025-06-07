@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
+const pool = require('../../db.js')
 
 describe('POST /texts', () => {
   afterAll(async () => {
