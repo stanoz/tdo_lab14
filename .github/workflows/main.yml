@@ -105,6 +105,8 @@ jobs:
     env:
       NODE_ENV: test
       NODE_VERSION: ${{ matrix.node_version }}
+      TEST_CPUS: '2'
+      TEST_MEMORY: '4g'
     environment: test
     needs:
       - audit

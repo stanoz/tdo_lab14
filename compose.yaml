@@ -22,6 +22,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: ${TEST_CPUS:-'0'}
+          memory: ${TEST_MEMORY:-'0'}
 
   db:
     container_name: tdo_lab14_db
