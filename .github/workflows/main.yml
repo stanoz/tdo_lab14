@@ -85,8 +85,18 @@ jobs:
           node-version: 18
       - name: Get code
         uses: actions/checkout@v4
-      - name: Load and cache dependencies
-        uses: ./.github/actions/cached-deps
+      - name: Set up Docker Compose
+        run: docker-compose up -d --build
+      - name: Wait for services to be ready
+        run: |
+          until docker-compose exec db pg_isready -U $POSTGRES_USER; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 5
+          done
+          until docker-compose exec redis redis-cli ping; do
+            echo "Waiting for Redis to be ready..."
+            sleep 5
+          done
       - name: Run unit tests
         id: unit-tests
         run: npm run test:unit
