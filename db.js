@@ -27,6 +27,4 @@ async function ensureTableExists() {
   await ensureTableExists();
 })();
 
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-};
+module.exports = pool
