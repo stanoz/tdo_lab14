@@ -66,37 +66,14 @@ jobs:
   unit-tests:
     runs-on: ubuntu-latest
     environment: test
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: ${{ env.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ env.POSTGRES_DATABASE }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U ${{ env.POSTGRES_USER }}"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd="redis-cli ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-    env:
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-      POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+#    env:
+#      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+#      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+#      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+#      POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+#      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+#      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+#      REDIS_PORT: ${{ secrets.REDIS_PORT }}
     needs:
       - audit
       - format-check
@@ -106,6 +83,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+      - name: Create .env file
+        run: |
+            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
       - name: Get code
         uses: actions/checkout@v4
       - name: Load and cache dependencies
@@ -116,4 +99,4 @@ jobs:
       - name: Test report
         uses: actions/download-artifact@v4
         with:
-          name: coverage/lcov-report
+         name: coverage/lcov-report
