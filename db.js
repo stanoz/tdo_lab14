@@ -1,11 +1,11 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: process.env.PGUSER || 'error',
-    host: process.env.PGHOST || 'localhost',
-    database: process.env.PGDATABASE || 'error',
-    password: process.env.PGPASSWORD || 'error',
-    port: process.env.PGPORT || 5432,
+    user: process.env.POSTGRES_USER || 'error',
+    host: process.env.POSTGRES_HOST || 'localhost',
+    database: process.env.POSTGRES_DATABASE || 'error',
+    password: process.env.POSTGRES_PASSWORD || 'error',
+    port: process.env.POSTGRES_PORT || 5432,
 });
 
 async function ensureTableExists() {
