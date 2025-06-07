@@ -5,6 +5,7 @@ const pool = require('../../db.js')
 describe('POST /texts', () => {
   afterAll(async () => {
     await pool.end();
+    app.close();
   });
 
   it('should return 400 if text is not provided', async () => {
