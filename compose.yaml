@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_HOST: localhost
+      POSTGRES_HOST: db
       POSTGRES_DATABASE: db_lab14
       POSTGRES_PORT: 5432
       REDIS_HOST: localhost
@@ -26,7 +26,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_HOST: localhost
+      POSTGRES_HOST: db
       POSTGRES_DATABASE: db_lab14
       POSTGRES_PORT: 5432
     healthcheck:
