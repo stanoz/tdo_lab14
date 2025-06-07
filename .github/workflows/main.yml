@@ -66,37 +66,32 @@ jobs:
   unit-tests:
     runs-on: ubuntu-latest
     environment: test
-#    env:
-#      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-#      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-#      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-#      POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-#      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-#      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-#      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
     needs:
       - audit
       - format-check
       - lint
     steps:
-      - name: Set Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - name: Create .env file
-        run: |
-            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
-            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
       - name: Get code
         uses: actions/checkout@v4
-      - name: Load and cache dependencies
-        uses: ./.github/actions/cached-deps
-      - name: Run unit tests
-        id: unit-tests
-        run: npm run test:unit
+      - name: Set up Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d --build
+          docker-compose -f docker-compose.yml ps
+      - name: Wait for services to be ready
+        run: sleep 30
+      - name: Run unit tests inside app container
+        run: docker-compose exec app npm run test:unit
       - name: Test report
         uses: actions/download-artifact@v4
         with:
-         name: coverage/lcov-report
+          name: coverage/lcov-report
+      - name: Tear down services
+        run: docker-compose -f docker-compose.yml down --volumes --remove-orphans
