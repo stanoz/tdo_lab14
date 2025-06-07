@@ -63,42 +63,67 @@ jobs:
       - name: Fix format on failure
         if: steps.format-check.outcome == 'failure'
         run: npx prettier . --write
-  unit-tests:
+  unit_tests:
     strategy:
       matrix:
         node_version: [16, 18, 20]
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: test
-      NODE_VERSION: ${{ matrix.node_version }}
-    environment: test
-    needs:
-      - audit
-      - format-check
-      - lint
+    container:
+      image: node:${{ matrix.node_version }}
+      options: --cpus 2 --memory 4g
     steps:
-      - name: Checkout code
+      - name: Get code
         uses: actions/checkout@v4
-
-      - name: Set up Docker Compose
-        run: docker compose up -d
-
-      - name: Run unit tests inside container
-        run: |
-          docker compose exec -T app npm run test:unit
-
-      - name: Ensure coverage dir exists
-        run: mkdir -p coverage/node-${{ matrix.node_version }}/lcov-report
-
-      - name: Copy coverage report from container
-        run: |
-          docker cp \
-            $(docker compose ps -q app):/app/coverage/junit-report-node-${{ matrix.node_version }} \
-            ./coverage/junit-report-node-${{ matrix.node_version }}
-
-      - name: Upload coverage report
+      - name: Load and cache dependencies
+        uses: ./.github/actions/cached-deps
+      - name: Run unit tests
+        run: npm run test:unit
+      - name: Archive test reports
         uses: actions/upload-artifact@v4
         with:
           name: junit-report-node-${{ matrix.node_version }}
+          path: junit.xml
+      - name: Archive coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ matrix.node_version }}
           path: coverage/
+#  unit-tests:
+#    strategy:
+#      matrix:
+#        node_version: [16, 18, 20]
+#    runs-on: ubuntu-latest
+#    env:
+#      NODE_ENV: test
+#      NODE_VERSION: ${{ matrix.node_version }}
+#    environment: test
+#    needs:
+#      - audit
+#      - format-check
+#      - lint
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Docker Compose
+#        run: docker compose up -d
+#
+#      - name: Run unit tests inside container
+#        run: |
+#          docker compose exec -T app npm run test:unit
+#
+#      - name: Ensure coverage dir exists
+#        run: mkdir -p coverage/node-${{ matrix.node_version }}/lcov-report
+#
+#      - name: Copy coverage report from container
+#        run: |
+#          docker cp \
+#            $(docker compose ps -q app):/app/coverage/junit-report-node-${{ matrix.node_version }} \
+#            ./coverage/junit-report-node-${{ matrix.node_version }}
+#
+#      - name: Upload coverage report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: junit-report-node-${{ matrix.node_version }}
+#          path: coverage/
 
