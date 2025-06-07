@@ -45,3 +45,14 @@ jobs:
         uses: ./.github/actions/cached-deps
       - name: Security audit
         run: npm audit --audit-level=high
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Load and cache dependencies
+        uses: ./.github/actions/cached-deps
