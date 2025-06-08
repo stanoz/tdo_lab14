@@ -1,0 +1,38 @@
+name: 'Deploy process'
+description: 'Simulate deploy process'
+inputs:
+  environment:
+    description: 'Environment for the application'
+    required: true
+  version:
+    description: 'Current version of the app'
+    required: false
+    default: 'latest'
+  notify-team:
+    description: 'Whether to send notification email to all team members. true/false'
+    required: false
+    default: 'true'
+outputs:
+  deployment-url:
+    description: 'Url to the deployed app'
+    value: ${{ steps.deployment.outputs.deploymentUrl }}
+  deployment-time:
+    description: 'Time when application was deployed'
+    value: ${{ steps.deployment.outputs.deploymentTime }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Set app environment
+      shell: bash
+      run: echo "Environment is set to '${{ inputs.environment }}'"
+    - name: Deploy the app
+      id: deployment
+      shell: bash
+      run: |
+        echo "Deployed app version '${{ inputs.version }}'"
+        echo "deploymentUrl='www.application.com'" >> $GITHUB_OUTPUT
+        echo "deploymentTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
+    - name: Send notification email
+      if: inputs.notify-team == 'true'
+      shell: bash
+      run: echo "Sent notification email to all team members"

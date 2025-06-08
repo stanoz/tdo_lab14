@@ -174,3 +174,14 @@ jobs:
       - name: Build the app
         if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integraion-tests.result == 'success' }}
         run: echo "Building the app..."
+  deploy-app:
+    runs-on: ubuntu-latest
+    needs: build-app
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Deploy process
+        uses: ./.github/actions/deploy
+        with:
+          environment: 'node'
+
