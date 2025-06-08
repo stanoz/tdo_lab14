@@ -7,14 +7,18 @@ beforeAll(async () => {
   await db.query(
     'CREATE TABLE IF NOT EXISTS texts (id SERIAL PRIMARY KEY, content TEXT NOT NULL)'
   );
-  app.listen(3000);
+  if (redisClient.isReady) {
+    console.log('REDIS CLIENT IS READY!!!!!!!!!!!!!!!')
+  }
 });
 
 afterAll(async () => {
   await db.query('DROP TABLE IF EXISTS texts');
-  await db.query('END');
-  await redisClient.quit();
-  app.close();
+  await db.end();
+  if (redisClient.isOpen) {
+    console.log('REDIS CLIENT IS OPEN!!!!!!!!!!!!!!!')
+    await redisClient.quit();
+  }
 });
 
 describe('POST /texts and GET /texts', () => {

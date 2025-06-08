@@ -23,7 +23,7 @@ async function ensureTableExists() {
   }
 }
 
-if (process.env.NODE_ENV !== 'unit_test') {
+if (process.env.NODE_ENV !== 'test') {
   (async () => {
     await ensureTableExists();
   })();

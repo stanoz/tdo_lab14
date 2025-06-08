@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./app.js",
+    "start": "node ./server.js",
     "lint": "eslint .",
     "test": "jest --coverage",
-    "test:unit": "jest NODE_ENV=unit_test --detectOpenHandles --coverage -reporters=default --reporters=jest-junit --testPathPattern=tests/unit",
-    "test:integration": "jest NODE_ENV=integration_test --detectOpenHandles --coverage --testPathPattern=tests/integration",
+    "test:unit": "jest NODE_ENV=test --detectOpenHandles --coverage -reporters=default --reporters=jest-junit --testPathPattern=tests/unit",
+    "test:integration": "jest NODE_ENV=integration --runInBand --detectOpenHandles --coverage --testPathPattern=tests/integration",
     "format:check": "prettier --check ."
   },
   "dependencies": {
