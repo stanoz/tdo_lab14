@@ -74,7 +74,7 @@ jobs:
     outputs:
           success: ${{ steps.test.outputs.success }}
     env:
-        NODE_ENV: test
+        NODE_ENV: unit_test
         NODE_VERSION: ${{ matrix.node_version }}
     runs-on: ubuntu-latest
     container:

@@ -9,7 +9,7 @@ const redisClient = createClient({
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'unit_test') {
   (async () => {
     await redisClient.connect();
   })();
