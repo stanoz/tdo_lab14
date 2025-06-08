@@ -136,7 +136,7 @@ jobs:
   integraion-tests:
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: test
+      NODE_ENV: integration_test
       NODE_VERSION: 18
     environment: test
     needs:
