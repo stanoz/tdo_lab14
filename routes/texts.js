@@ -29,7 +29,7 @@ async function postHandler(req, res) {
         'INSERT INTO texts(content) VALUES($1) RETURNING *',
         [text]
     );
-    // await redisClient.del('texts');
+    await redisClient.del('texts');
     return res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);
@@ -41,13 +41,13 @@ router.post('/', postHandler)
 
 router.get('/', async (req, res) => {
   try {
-    // const cachedTexts = await redisClient.get('texts');
-    // if (cachedTexts) {
-    //   return res.json(JSON.parse(cachedTexts));
-    // }
+    const cachedTexts = await redisClient.get('texts');
+    if (cachedTexts) {
+      return res.json(JSON.parse(cachedTexts));
+    }
 
     const result = await db.query('SELECT * FROM texts ORDER BY id ASC');
-    // await redisClient.setEx('texts', 3600, JSON.stringify(result.rows)); // Cache for 1 hour
+    await redisClient.setEx('texts', 3600, JSON.stringify(result.rows)); // Cache for 1 hour
     res.json(result.rows);
   } catch (err) {
     console.error(err);

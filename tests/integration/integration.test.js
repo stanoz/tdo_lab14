@@ -10,6 +10,7 @@ beforeAll(async () => {
   if (redisClient.isReady) {
     console.log('REDIS CLIENT IS READY!!!!!!!!!!!!!!!')
   }
+  await redisClient.connect()
 });
 
 afterAll(async () => {
