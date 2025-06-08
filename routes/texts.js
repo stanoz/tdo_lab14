@@ -4,22 +4,40 @@ const redisClient = require('../redisClient');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+// router.post('/', async (req, res) => {
+//   const { text } = req.body;
+//   if (!text) return res.status(400).json({ error: 'Text is required' });
+//
+//   try {
+//     const result = await db.query(
+//       'INSERT INTO texts(content) VALUES($1) RETURNING *',
+//       [text]
+//     );
+//     await redisClient.del('texts'); // Invalidate cache
+//     res.status(201).json(result.rows[0]);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Database error' });
+//   }
+// });
+
+async function postHandler(req, res) {
   const { text } = req.body;
   if (!text) return res.status(400).json({ error: 'Text is required' });
-
   try {
     const result = await db.query(
-      'INSERT INTO texts(content) VALUES($1) RETURNING *',
-      [text]
+        'INSERT INTO texts(content) VALUES($1) RETURNING *',
+        [text]
     );
-    await redisClient.del('texts'); // Invalidate cache
-    res.status(201).json(result.rows[0]);
+    await redisClient.del('texts');
+    return res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Database error' });
+    return res.status(500).json({ error: 'Database error' });
   }
-});
+}
+
+router.post('/', postHandler)
 
 router.get('/', async (req, res) => {
   try {
@@ -38,3 +56,4 @@ router.get('/', async (req, res) => {
 });
 
 module.exports = router;
+module.exports.postHandler = postHandler;

@@ -23,8 +23,11 @@ async function ensureTableExists() {
   }
 }
 
-(async () => {
-  await ensureTableExists();
-})();
+if (process.env.NODE_ENV !== 'test') {
+  (async () => {
+    await ensureTableExists();
+  })();
+}
+
 
 module.exports = pool
