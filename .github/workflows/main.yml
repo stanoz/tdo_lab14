@@ -181,7 +181,12 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
       - name: Deploy process
+        id: deploy-process
         uses: ./.github/actions/deploy
         with:
           environment: 'node'
+      - name: Display deployment URL and time
+        run: |
+          echo "Deployment URL ${{ steps.deploy-process.outputs.deploymentUrl}}"
+          echo "Deployment time ${{ steps.deploy-process.outputs.deploymentTime }}"
 
