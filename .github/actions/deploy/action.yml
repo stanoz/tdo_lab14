@@ -15,10 +15,10 @@ inputs:
 outputs:
   deployment-url:
     description: 'Url to the deployed app'
-    value: ${{ steps.deployment.outputs.deploymentUrl }}
+    value: ${{ steps.deployment.outputs.deployment-url }}
   deployment-time:
     description: 'Time when application was deployed'
-    value: ${{ steps.deployment.outputs.deploymentTime }}
+    value: ${{ steps.deployment.outputs.deployment-time }}
 runs:
   using: 'composite'
   steps:
@@ -30,8 +30,8 @@ runs:
       shell: bash
       run: |
         echo "Deployed app version '${{ inputs.version }}'"
-        echo "deploymentUrl='www.application.com'" >> $GITHUB_OUTPUT
-        echo "deploymentTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
+        echo "deployment-url='www.application.com'" >> $GITHUB_OUTPUT
+        echo "deployment-time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
     - name: Send notification email
       if: inputs.notify-team == 'true'
       shell: bash

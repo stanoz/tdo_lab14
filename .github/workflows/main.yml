@@ -187,6 +187,6 @@ jobs:
           environment: 'node'
       - name: Display deployment URL and time
         run: |
-          echo "Deployment URL ${{ steps.deploy-process.outputs.deploymentUrl}}"
-          echo "Deployment time ${{ steps.deploy-process.outputs.deploymentTime }}"
+          echo "Deployment URL ${{ steps.deploy-process.outputs.deployment-url}}"
+          echo "Deployment time ${{ steps.deploy-process.outputs.deployment-time }}"
 
