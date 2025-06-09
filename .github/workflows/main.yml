@@ -76,6 +76,7 @@ jobs:
     env:
         NODE_ENV: test
         NODE_VERSION: ${{ matrix.node_version }}
+    environment: test
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node_version }}
@@ -90,6 +91,10 @@ jobs:
       - name: Set success
         id: unit-tests
         run: echo "success=true" >> $GITHUB_OUTPUT
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 #  unit-tests:
 #    strategy:
 #      matrix:
@@ -165,10 +170,6 @@ jobs:
         with:
           name: lcov-report
           path: ./coverage/lcov-report
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
   build-app:
     runs-on: ubuntu-latest
     needs:
