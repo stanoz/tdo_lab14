@@ -180,6 +180,8 @@ jobs:
       - name: Build the app
         if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integraion-tests.result == 'success' }}
         run: npm build
+      - name: Check dirs
+        run: echo ls
       - name: Upload built project
         uses: actions/upload-artifact@v4
         with:
