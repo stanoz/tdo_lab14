@@ -179,6 +179,8 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v4
+      - name: Load and cache dependencies
+        uses: ./.github/actions/cached-deps
       - name: Build the app
         if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integration-tests.result == 'success' }}
         run: npm run build
