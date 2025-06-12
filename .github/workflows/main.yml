@@ -90,7 +90,7 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
       - name: Set success
-        id: unit-tests
+        id: test
         run: echo "success=true" >> $GITHUB_OUTPUT
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
@@ -178,7 +178,7 @@ jobs:
       - unit-tests
     steps:
       - name: Build the app
-        if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integraion-tests.result == 'success' }}
+        if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integration-tests.result == 'success' }}
         run: npm run build
       - name: Check dirs
         run: ls
