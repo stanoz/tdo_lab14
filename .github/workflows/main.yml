@@ -177,6 +177,8 @@ jobs:
       - integration-tests
       - unit-tests
     steps:
+      - name: Get code
+        uses: actions/checkout@v4
       - name: Build the app
         if: ${{ needs.unit-tests.outputs.success == 'true' && needs.integration-tests.result == 'success' }}
         run: npm run build
